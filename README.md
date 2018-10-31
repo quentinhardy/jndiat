@@ -35,6 +35,8 @@ Tested on Oracle Weblogic 11.
 
 # Usage examples
 
+Download latest release of jndiat [https://github.com/quentinhardy/jndiat/releases](https://github.com/quentinhardy/jndiat/releases)
+
 ## Main help
 
 ```bash
