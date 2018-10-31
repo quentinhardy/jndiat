@@ -1,7 +1,5 @@
-# jndiat
-JNDI Attacking Tool
+# JNDIAT - JNDI Attacking Tool
 
----------------------------------------------------------------------------------------------------------------------------------------
 **JNDIAT** (**JNDI** **A**ttacking **T**ool) is an open source penetration testing tool that tests the security of **Weblogic** servers **through T3 protocol**.
 
 Usage examples of JNDIAT:
@@ -14,12 +12,12 @@ Usage examples of JNDIAT:
 Tested on Oracle Weblogic 11.
 
 # Changelog
----------------------------------------------------------------------------------------------------------------------------------------
+
 + Version **0.01 (2014/02/02)** :
   + first version.
  
 # Features
----------------------------------------------------------------------------------------------------------------------------------------
+
 + Supports **T3** and **T3s** (**T3 over SSL**) connections. JNDIAT creates a local temporary Java KeyStore to validate the Weblogic server's certificate;
 + Supports authentication with **empty credentials** ie login='' and password=''. Public JDBC datasources can be used with an empty account by default in Weblogic (tested on version11);
 + Supports targets if the weblogic is in a domain;
@@ -31,7 +29,6 @@ Tested on Oracle Weblogic 11.
 
 
 # Usage examples
----------------------------------------------------------------------------------------------------------------------------------------
 
 ## Main help
 
