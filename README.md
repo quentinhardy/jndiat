@@ -1,3 +1,8 @@
+| __Quentin HARDY__    |
+| ------------- |
+| __quentin.hardy@protonmail.com__  |
+| __quentin.hardy@bt.com__    |
+
 # JNDIAT - JNDI Attacking Tool
 
 **JNDIAT** (**JNDI** **A**ttacking **T**ool) is an open source penetration testing tool that tests the security of **Weblogic** servers **through T3 protocol**.
@@ -120,3 +125,13 @@ To undeploy a specific application named *appli-name-displayed*:
 ```bash
 java -jar Jndiat.jar deployer -s 192.168.56.101 -p 7002 -U weblogic -P welcome1 --undeploy --display-name 'appli-name-displayed'
 ```
+
+Special thanks
+====
+Special thanks to some previous BT pentesters (e.g. @gno) for the initial work.
+
+Donation
+====
+If you want to support my work doing a donation, I will appreciate a lot:
+
+* Via BTC: 36FugL6SnFrFfbVXRPcJATK9GsXEY6mJbf
