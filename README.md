@@ -14,10 +14,12 @@ Usage examples of JNDIAT:
 * You want to **use a unprotected (i.e. 'public') JDBC datasource** in order to get a remote interactive SQL shell;
 * You want to **deploy an application** (e.g. War) on the Weblogic server in order to have a Web shell (account required).
 
-Tested on Oracle Weblogic 11.
+Tested on Oracle Weblogic 11 and OpenJDK 8 (for client).
 
 # Changelog
 
++ Version **1.00 (2021/06/11)** :
+  + bug fix when can not list bindings
 + Version **0.01 (2018/11/31)** :
   + first version.
  
