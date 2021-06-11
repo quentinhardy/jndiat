@@ -67,12 +67,19 @@ public class JndiListing extends T3Connection{
 					if (pos - 1 ==0){this.lastPath.clear();};
 				}
 			}
-		}catch (javax.naming.NoPermissionException e) {
+		}
+		catch (javax.naming.NoPermissionException e) {
 			myLogger.warning("Current user does not have permission on '"+appellant+"':'"+e+"'");
 			this.addCurrentPathToPaths(className);
 			this.deleteLastElementOfCurrentPath();
-		} catch (NamingException ex) {
+		} 
+		catch (NamingException ex) {
 			myLogger.fine("JNDI failure: "+ex);
+		}
+		catch (Exception e){
+			myLogger.warning("Impossible to list bindings for '"+appellant+"': '"+e+"'");
+			this.addCurrentPathToPaths(className);
+			this.deleteLastElementOfCurrentPath();
 		}
 		if (lastPath.toArray().length>=1) {this.deleteLastElementOfCurrentPath();};
 		myLogger.finest("Stop the fonction listContext(). Pos="+pos+", lastPath="+this.getPrintableJndiList());
@@ -119,13 +126,3 @@ public class JndiListing extends T3Connection{
 		return datasources;
 	}
 }
-
-
-
-
-
-
-
-
-
-
