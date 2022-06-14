@@ -34,6 +34,11 @@ Tested on Oracle Weblogic 11 and OpenJDK 8 (for client).
 + Gets a **remote sql shell** via a JDBC datasource;
 + With a privileged account, you can **deploy an application** on the weblogic server in order to have a Web shell for example.
 
+ 
+# Requirements
+
++ OpenJDK 8
+
 
 # Usage examples
 
@@ -129,6 +134,14 @@ To undeploy a specific application named *appli-name-displayed*:
 ```bash
 java -jar Jndiat.jar deployer -s 192.168.56.101 -p 7002 -U weblogic -P welcome1 --undeploy --display-name 'appli-name-displayed'
 ```
+
+## Force SSL version of t3 protocol
+In some corner cases, the autodetection of t3s usage is not working properly. It is possible to force the use of t3s instead to t3 with the use of *--ssl*.
+
+```bash
+java -jar Jndiat.jar [module] --ssl [...]
+```
+
 
 Special thanks
 ====
