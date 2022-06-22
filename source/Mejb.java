@@ -27,8 +27,8 @@ public class Mejb extends T3Connection{
 	private ManagementHome home;
 	
 	//*************   Constructor *************
-	public Mejb(String ip, Integer port, boolean isSSL, String username, String password){
-		super(ip, port, isSSL, username, password, "weblogic.jndi.WLInitialContextFactory", true);
+	public Mejb(String ip, Integer port, String username, String password){
+		super(ip, port, username, password, "weblogic.jndi.WLInitialContextFactory", true);
 		myLogger.fine("SQLDataSource object created");
 		this.home = null;
 	}

@@ -22,7 +22,6 @@ public class Deployer extends MyPrinter{
 	private static ModuleType[] moduleTypeTable = new ModuleType[] {ModuleType.EAR,ModuleType.WAR,ModuleType.EJB,ModuleType.RAR,ModuleType.CAR};
 	private String ip;
 	private String port;
-	private boolean isSSL;
 	private String username;
 	private String password;
 	private WebLogicDeploymentManager deployManager;
@@ -30,11 +29,10 @@ public class Deployer extends MyPrinter{
 	private T3s t3s;
 
 	/*Constructor*/
-	public Deployer(String ip, int port, String username, boolean isSSL, String password, String target){
+	public Deployer(String ip, int port, String username, String password, String target){
 		myLogger.fine("Deployer object created");
 		this.ip=ip;
 		this.port=Integer.toString(port);
-		this.isSSL=isSSL;
 		this.username=username;
 		this.password=password;
 		this.deployManager=null;
@@ -150,7 +148,7 @@ public class Deployer extends MyPrinter{
 			myLogger.info("Connection to "+this.ip+":"+this.port+"established throuth T3 protocol, good news:)");
 			return deployManager;
 		}catch (Exception e) {
-			if (this.getStackTrace(e).contains(this.ERROR_CONNECTION_RESET) || this.isSSL==true){
+			if (this.getStackTrace(e).contains(this.ERROR_CONNECTION_RESET)){
 				myLogger.fine("Trying to connect with t3s (t3 over SSL) because there is a reset with t3");
 				this.t3s = new T3s (this.ip, Integer.parseInt(this.port));
 				if (t3s.makeT3sConfig() == false){
