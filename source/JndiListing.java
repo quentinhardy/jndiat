@@ -13,8 +13,8 @@ public class JndiListing extends T3Connection{
 	
 	final String JDBC_CLASS_DATASOURCE_ID = ".jdbc.";
 
-	public JndiListing(String ip, Integer port, String username, String password){
-		super(ip, port, username, password, "weblogic.jndi.WLInitialContextFactory", true);
+	public JndiListing(String ip, Integer port, boolean isSSL, String username, String password){
+		super(ip, port, isSSL, username, password, "weblogic.jndi.WLInitialContextFactory", true);
 		myLogger.fine("JndiListing object created");
 		this.paths = new ArrayList<String[]>();
 		this.lastPath = new ArrayList();

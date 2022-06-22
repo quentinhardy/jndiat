@@ -19,14 +19,16 @@ public class BruteForce extends T3Connection{
 	private String credFilename;
 	private String ip;
 	private Integer port;
+	private boolean isSSL;
 	private String separator;
 			
 	//*************   Constructor *************
-	public BruteForce(String ip, Integer port, String initial_context_factory, boolean printErrorConnection, String credFilename, String separator){
+	public BruteForce(String ip, Integer port, boolean isSSL, String initial_context_factory, boolean printErrorConnection, String credFilename, String separator){
 		super(initial_context_factory, false);
 		myLogger.fine("Brutforce object created");
 		this.ip = ip;
 		this.port = port;
+		this.isSSL = isSSL;
 		this.accountsFound = new ArrayList<String[]>();
 		this.credFilename = credFilename;
 		this.separator = separator;
@@ -62,7 +64,7 @@ public class BruteForce extends T3Connection{
 				creds = line.replaceAll("\n","").replaceAll("\t","").replaceAll("\r","").split(this.separator);
 				if (creds.length == 0) {creds = new String[]{"",""};};
 				myLogger.finer("Using the username '"+creds[0]+"' and the password '"+creds[1]+"'");
-				connectionStatus = connection (this.ip, this.port, creds[0], creds[1]);
+				connectionStatus = connection (this.ip, this.port, this.isSSL, creds[0], creds[1]);
 				if (connectionStatus == true){
 					myLogger.fine("We can use the login '"+creds[0]+"' with the password '"+creds[1]+"' to establish a T3 connection");
 					this.accountsFound.add(creds);

@@ -13,6 +13,7 @@ public class T3Connection extends MyPrinter {
 	private static Logger myLogger = Logger.getLogger("JNDIAT");
 	private String ip;
 	private int port;
+	private boolean isSSL;
 	private String user;
 	private String password;
 	private String uri;
@@ -32,7 +33,7 @@ public class T3Connection extends MyPrinter {
 		this.t3s = null;
 	}
 	
-	public T3Connection(String ip, int port, String username, String password, String initial_context_factory, boolean cntionErrorAsSevereError){
+	public T3Connection(String ip, int port, boolean isSSL, String username, String password, String initial_context_factory, boolean cntionErrorAsSevereError){
 		super();
 		myLogger.fine("T3Connection object created");
 		this.initial_context_factory = initial_context_factory;
@@ -40,6 +41,7 @@ public class T3Connection extends MyPrinter {
 		this.cntionErrorAsSevereError = cntionErrorAsSevereError;
 		this.ip = ip;
 		this.port = port;
+		this.isSSL = isSSL;
 		this.user = username;
 		this.password = password;
 		this.t3s = null;
@@ -47,10 +49,11 @@ public class T3Connection extends MyPrinter {
 	
 	//*************   Connection *************
 	//Return True if connected. Otherwise return False
-	public boolean connection (String ip, int port, String username, String password){
-		myLogger.fine("Try to establish a connection to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
+	public boolean connection (String ip, int port, boolean isSSL, String username, String password){
+		myLogger.fine("Try to establish a connection to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"' and ssl="+isSSL.toString()+"");
 		this.ip = ip;
 		this.port = port;
+		this.isSSL = isSSL;
 		this.user = username;
 		this.password = password;
 		this.uri = "t3://"+ this.ip +":"+ this.port +"";
@@ -65,7 +68,7 @@ public class T3Connection extends MyPrinter {
 			myLogger.fine("You can use "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			return true;
 		}catch (CommunicationException er) {
-			if (er.toString().contains(ERROR_CONNECTION_RESET)){
+			if (er.toString().contains(ERROR_CONNECTION_RESET) || this.isSSL==true){
 				myLogger.fine("Trying to connect with t3s (t3 over SSL) because there is a reset with t3");
 				this.t3s = new T3s (this.ip, this.port);
 				if (t3s.makeT3sConfig() == false){

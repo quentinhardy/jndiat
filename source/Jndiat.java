@@ -78,6 +78,7 @@ public class Jndiat extends MyPrinter {
 		addUsefulOptions(parserScan);
 		ArgumentGroup commonGroupParserScan = parserScan.addArgumentGroup("common options");
 		addServerOption (commonGroupParserScan);
+		addSSLOption (commonGroupParserScan);
 		addCredentialsOptions (commonGroupParserScan);
 		ArgumentGroup mandatoryGroupParserScan = parserScan.addArgumentGroup("a mandatory command");
 		mandatoryGroupParserScan.addArgument("--ports").dest("ports").setDefault("").help("port(s) to scan");
@@ -86,6 +87,7 @@ public class Jndiat extends MyPrinter {
 		addUsefulOptions(parserBruteForce);
 		ArgumentGroup commonGroupParserBruteForce = parserBruteForce.addArgumentGroup("common options");
 		addServerOption (commonGroupParserBruteForce);
+		addSSLOption (commonGroupParserBruteForce);
 		addPortArgument (commonGroupParserBruteForce);
 		ArgumentGroup specificGroupParserBruteForce = parserBruteForce.addArgumentGroup("specific options");
 		specificGroupParserBruteForce.addArgument("--cred-file").dest("cred-file").setDefault("").help("credentials file to use");
@@ -179,7 +181,7 @@ public class Jndiat extends MyPrinter {
 			myLogger.info("You want to scan the "+ns.getString("server")+" target on port(s) "+ns.getString("ports")+", starting...");
 			Scanner scanner = new Scanner();
 			this.disableColorInObjectIfNeeded(scanner);
-			scanner.scan(ns.getString("server"),ns.getString("ports"),ns.getString("username"),ns.getString("password"));
+			scanner.scan(ns.getString("server"),ns.getString("ports"),ns.getBoolean("ssl"),ns.getString("username"),ns.getString("password"));
 			scanner.printOpenedPorts();
 			}
 			else {
@@ -190,7 +192,7 @@ public class Jndiat extends MyPrinter {
 		if (ns.getString("module")=="bruteforce") {
 			this.printTitle("Searching valid credentials");
 			myLogger.info("You want to search valid credentials to "+ns.getString("server")+" target on port "+ns.getString("port")+", starting...");
-			BruteForce bruteForce = new BruteForce(ns.getString("server"),ns.getInt("port"),"weblogic.jndi.WLInitialContextFactory", false, ns.getString("cred-file"), ns.getString("separator"));
+			BruteForce bruteForce = new BruteForce(ns.getString("server"),ns.getInt("port"),ns.getBoolean("ssl"),"weblogic.jndi.WLInitialContextFactory", false, ns.getString("cred-file"), ns.getString("separator"));
 			this.disableColorInObjectIfNeeded(bruteForce);
 			bruteForce.searchValidCreds();
 			bruteForce.printValidCreds();
@@ -199,14 +201,14 @@ public class Jndiat extends MyPrinter {
 		if (ns.getString("module")=="list"){
 			this.printTitle("Listing JNDI accessible with the T3 protocol");
 			myLogger.info("You want to list JNDI on the "+ns.getString("server")+" target on port "+ns.getInt("port")+", starting...");
-			JndiListing jndiListing = new JndiListing(ns.getString("server"),ns.getInt("port"),ns.getString("username"),ns.getString("password"));
+			JndiListing jndiListing = new JndiListing(ns.getString("server"),ns.getInt("port"),ns.getBoolean("ssl"),ns.getString("username"),ns.getString("password"));
 			jndiListing.printJndi();
 		}
 		//datasource module
 		if (ns.getString("module")=="datasource"){
 			String datasourceToUse = "";
 			myLogger.info("You want to get SQL connection from a datasource on the "+ns.getString("server")+" target on port "+ns.getInt("port")+", starting...");
-			SQLDataSource sqlDataSource = new SQLDataSource(ns.getString("server"),ns.getInt("port"),ns.getString("username"),ns.getString("password"));
+			SQLDataSource sqlDataSource = new SQLDataSource(ns.getString("server"),ns.getInt("port"),ns.getBoolean("ssl"),ns.getString("username"),ns.getString("password"));
 			//sqlshell
 			if (ns.getBoolean("sqlshell")==true){
 				this.printTitle("You want a SQL shell");
@@ -248,13 +250,13 @@ public class Jndiat extends MyPrinter {
 		if (ns.getString("module")=="mejb"){
 			this.printTitle("Accessing the MEJB through T3 protocol");
 			myLogger.info("You want to access the MEJB on the "+ns.getString("server")+" target on port "+ns.getInt("port")+", starting...");
-			Mejb mejb = new Mejb(ns.getString("server"),ns.getInt("port"),ns.getString("username"),ns.getString("password"));
+			Mejb mejb = new Mejb(ns.getString("server"),ns.getInt("port"),ns.getBoolean("ssl"),ns.getString("username"),ns.getString("password"));
 			mejb.getAllJMONames();
 		}
 		
 		//deploy module
 		if (ns.getString("module")=="deployer"){
-			Deployer deployer = new Deployer(ns.getString("server"),ns.getInt("port"),ns.getString("username"),ns.getString("password"),ns.getString("target"));
+			Deployer deployer = new Deployer(ns.getString("server"),ns.getInt("port"),ns.getBoolean("ssl"),ns.getString("username"),ns.getString("password"),ns.getString("target"));
 			if (ns.getBoolean("deploy")==true){
 				this.printTitle("Deploy the application "+ns.getString("app-file"));
 				if (new File(ns.getString("app-file")).exists()==false){
@@ -301,6 +303,10 @@ public class Jndiat extends MyPrinter {
 		commonGroup.addArgument("-s").dest("server").help("target");
 	}
 	
+	private void addSSLOption (ArgumentGroup commonGroup){
+		commonGroup.addArgument("--ssl").dest("ssl").action(Arguments.storeTrue()).help("uses ssl (t3s)");
+	}
+	
 	public void addCredentialsOptions (ArgumentGroup commonGroup){
 		commonGroup.addArgument("-U").dest("username").setDefault("").help("username");
 		commonGroup.addArgument("-P").dest("password").setDefault("").help("password");
@@ -309,6 +315,7 @@ public class Jndiat extends MyPrinter {
 	private void addCommonOptions(Subparser parser){
 		ArgumentGroup commonGroup = parser.addArgumentGroup("common options");
 		addServerOption (commonGroup);
+		addSSLOption (commonGroup);
 		addCredentialsOptions (commonGroup);
 		addPortArgument(commonGroup);
 	}
