@@ -21,7 +21,7 @@ public class Scanner extends T3Connection{
 	
 	/* To scan ports of a server
 	 * Compute openedPorts */
-	public void scan (String ip, String ports, boolean isSSL, String username, String password){
+	public void scan (String ip, String ports, String username, String password){
 		myLogger.info("Scanning ports '"+ports+"' of "+ip+" with password '"+username+"' and password '"+password+"'");
 		int nb;
 		boolean connected = false;
@@ -49,7 +49,7 @@ public class Scanner extends T3Connection{
 		for (nb=0; nb<portsList.length; nb++) {
 			myLogger.fine("Scanning the port "+portsList[nb]);
 			int portToTest = Integer.valueOf(portsList[nb]);
-			connected = this.connection(ip, portToTest, isSSL, username, password);
+			connected = this.connection(ip, portToTest, username, password);
 			if (connected == true){
 				myLogger.fine("Target "+ip+":"+portToTest+" : T3 connection establish :)");
 				this.openedPorts.add(portToTest);
