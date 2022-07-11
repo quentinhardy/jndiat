@@ -17,7 +17,9 @@ Usage examples of JNDIAT:
 Tested on Oracle Weblogic 12 and Java JRE 8 ([Official Download Link](https://www.java.com/en/download/manual.jsp)) for JNIDAT 2.0 version.
 Tested on Oracle Weblogic 11 and Java JRE 8 for JNIDAT 1.0 version.
 
-**Notice**: If you have problems to connect to older Weblogic server with jnidat v2.0, you should try the JNDIAT v1.0. Indeed, jndiat 2.0 use weblogic v12 libraries. jndiat 1.0 uses older weblogic libraries.
+**Notices**: 
+* If you have problems to connect to older Weblogic server with jnidat v2.0, you should try the JNDIAT v1.0. Indeed, jndiat 2.0 use weblogic v12 libraries. jndiat 1.0 uses older weblogic libraries.
+* Don't use OpenJDK for running Jnidat jar file.
 
 # Changelog
 
