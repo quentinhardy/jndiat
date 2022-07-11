@@ -14,8 +14,8 @@ Usage examples of JNDIAT:
 * You want to **use a unprotected (i.e. 'public') JDBC datasource** in order to get a remote interactive SQL shell;
 * You want to **deploy an application** (e.g. War) on the Weblogic server in order to have a Web shell (account required).
 
-Tested on Oracle Weblogic 12 and Java JDK 8 ([https://www.java.com/en/download/manual.jsp](download link)) for JNIDAT 2.0 version.
-Tested on Oracle Weblogic 11 and Java JDK 8 for JNIDAT 1.0 version.
+Tested on Oracle Weblogic 12 and Java JRE 8 ([https://www.java.com/en/download/manual.jsp](download link)) for JNIDAT 2.0 version.
+Tested on Oracle Weblogic 11 and Java JRE 8 for JNIDAT 1.0 version.
 
 **Notice**: If you have problems to connect to older Weblogic server with jnidat v2.0, you should try the JNDIAT v1.0. Indeed, jndiat 2.0 use weblogic v12 libraries. jndiat 1.0 uses older weblogic libraries.
 
@@ -134,6 +134,10 @@ To undeploy a specific application named *appli-name-displayed*:
 ```bash
 java -jar Jndiat.jar deployer -s 192.168.56.101 -p 7002 -U weblogic -P welcome1 --undeploy --display-name 'appli-name-displayed'
 ```
+
+Special thanks
+====
+apache ant 1.10.12 and Java JDK 8 has been used for generating jnidat 2.0 jar file.
 
 Special thanks
 ====
