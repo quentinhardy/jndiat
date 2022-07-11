@@ -148,6 +148,11 @@ public class Deployer extends MyPrinter{
 			myLogger.info("Connection to "+this.ip+":"+this.port+"established throuth T3 protocol, good news:)");
 			return deployManager;
 		}catch (Exception e) {
+            myLogger.fine("Connection error "+e.toString());
+            if (e.toString().contains("javax.naming.AuthenticationException") || e.toString().contains("exceptions.DeploymentManagerCreationException") || e.toString().contains("SPI:260010")){
+                myLogger.fine("Invalid credentials");
+                return null;
+            }
             myLogger.fine("Trying to connect with t3s (t3 over SSL) because there is a reset with t3");
             this.t3s = new T3s (this.ip, Integer.parseInt(this.port));
             if (t3s.makeT3sConfig() == false){

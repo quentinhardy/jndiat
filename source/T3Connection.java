@@ -58,7 +58,6 @@ public class T3Connection extends MyPrinter {
 		env.put(Context.PROVIDER_URL,this.uri);
 		env.put(Context.SECURITY_PRINCIPAL,this.user);
 		env.put(Context.SECURITY_CREDENTIALS,this.password);
-        myLogger.fine("--------------");
 		try {
             myLogger.fine("Try to establish a T3 connection (without ssl) to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			this.ctx = new InitialContext(env);
@@ -66,7 +65,7 @@ public class T3Connection extends MyPrinter {
 			myLogger.fine("You can use "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			return true;
 		}catch (NamingException ei1) {
-            myLogger.fine("Connection error"+ei1.toString());
+            myLogger.fine("Connection error "+ei1.toString());
             try {
                 this.ctx.close();//Close context
             }catch (Exception e2) {
