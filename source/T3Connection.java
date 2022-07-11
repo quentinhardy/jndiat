@@ -65,7 +65,7 @@ public class T3Connection extends MyPrinter {
 			myLogger.fine("You can use "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			return true;
 		}catch (NamingException ei1) {
-            myLogger.fine("Connection error "+ei1.toString());
+            myLogger.fine("Connection error"+ei1.toString());
             try {
                 this.ctx.close();//Close context
             }catch (Exception e2) {

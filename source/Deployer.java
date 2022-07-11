@@ -149,7 +149,7 @@ public class Deployer extends MyPrinter{
 			return deployManager;
 		}catch (Exception e) {
             myLogger.fine("Connection error "+e.toString());
-            if (e.toString().contains("javax.naming.AuthenticationException") || e.toString().contains("exceptions.DeploymentManagerCreationException") || e.toString().contains("SPI:260010")){
+            if (e.toString().contains("javax.naming.AuthenticationException") || e.toString().contains("SPI:260010")){
                 myLogger.fine("Invalid credentials");
                 return null;
             }
