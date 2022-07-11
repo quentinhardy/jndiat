@@ -58,6 +58,7 @@ public class T3Connection extends MyPrinter {
 		env.put(Context.PROVIDER_URL,this.uri);
 		env.put(Context.SECURITY_PRINCIPAL,this.user);
 		env.put(Context.SECURITY_CREDENTIALS,this.password);
+        myLogger.fine("--------------");
 		try {
             myLogger.fine("Try to establish a T3 connection (without ssl) to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			this.ctx = new InitialContext(env);
@@ -70,6 +71,10 @@ public class T3Connection extends MyPrinter {
                 this.ctx.close();//Close context
             }catch (Exception e2) {
                 myLogger.fine("Impossible to close context");
+            }
+            if (ei1.toString().contains("javax.naming.AuthenticationException")){
+                myLogger.fine("Invalid credetnials");
+                return false;
             }
             myLogger.fine("Try to establish a T3S connection (with ssl) to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
             this.t3s = new T3s (this.ip, this.port);
@@ -104,6 +109,14 @@ public class T3Connection extends MyPrinter {
                 this.genericConnectionErrorPrinter(e);
             }
 		}
+        /*
+        catch (AuthenticationException e) {
+			if (this.cntionErrorAsSevereError == true){myLogger.severe("'"+this.user+"' can't be authenticated on "+ip+":"+port);}
+			else {myLogger.fine("Can't be authenticated on "+ip+":"+port+"with credentials '"+username+"'/'"+password+"': invalid credentials");}
+			this.lastConnectionErrorDescription = e.toString();
+		}catch (Exception e) {
+			this.genericConnectionErrorPrinter(e);
+		}*/
 		return false;
 	}
 	
