@@ -5,8 +5,8 @@ import java.lang.Integer;
 import java.lang.Thread;
 import java.util.logging.Logger;
 import java.io.*;
-import weblogic.deploy.api.tools.*;  //SesionHelper
-import weblogic.deploy.api.spi .*;  //WebLogicDeploymentManager
+import weblogic.deploy.api.tools.SessionHelper;  //SesionHelper
+import weblogic.deploy.api.spi.WebLogicDeploymentManager;  //WebLogicDeploymentManager
 import weblogic.deploy.api.spi.DeploymentOptions;
 import javax.enterprise.deploy.spi.TargetModuleID;
 import javax.enterprise.deploy.spi.status.ProgressObject;
@@ -148,28 +148,23 @@ public class Deployer extends MyPrinter{
 			myLogger.info("Connection to "+this.ip+":"+this.port+"established throuth T3 protocol, good news:)");
 			return deployManager;
 		}catch (Exception e) {
-			if (this.getStackTrace(e).contains(this.ERROR_CONNECTION_RESET)){
-				myLogger.fine("Trying to connect with t3s (t3 over SSL) because there is a reset with t3");
-				this.t3s = new T3s (this.ip, Integer.parseInt(this.port));
-				if (t3s.makeT3sConfig() == false){
-					myLogger.severe("Impossible to make the T3s configuration");
-					return null;
-				}
-				else {
-					try {
-						myLogger.fine("T3s configuration made");
-						this.deployManager = SessionHelper.getRemoteDeploymentManager("t3s", this.ip, this.port , this.username, this.password);
-						myLogger.info("Connection to "+this.ip+":"+this.port+"established throuth T3s protocol, good news:)");
-						return deployManager;
-					}catch (Exception e2) {
-						myLogger.severe("Impossible to connect to t3s://"+this.ip+":"+this.port+"/"+this.username+":"+this.password+" :"+e);
-						return null;
-					}
-				}
-			}else {
-				myLogger.severe("Impossible to connect to t3://"+this.ip+":"+this.port+"/"+this.username+":"+this.password+" :'"+e+"'");
-				return null;
-			}
+            myLogger.fine("Trying to connect with t3s (t3 over SSL) because there is a reset with t3");
+            this.t3s = new T3s (this.ip, Integer.parseInt(this.port));
+            if (t3s.makeT3sConfig() == false){
+                myLogger.severe("Impossible to make the T3s configuration");
+                return null;
+            }
+            else {
+                try {
+                    myLogger.fine("T3s configuration made");
+                    this.deployManager = SessionHelper.getRemoteDeploymentManager("t3s", this.ip, this.port , this.username, this.password);
+                    myLogger.info("Connection to "+this.ip+":"+this.port+"established throuth T3s protocol, good news:)");
+                    return deployManager;
+                }catch (Exception e2) {
+                    myLogger.severe("Impossible to connect to t3s://"+this.ip+":"+this.port+"/"+this.username+":"+this.password+" :"+e);
+                    return null;
+                }
+            }
 		}
 	}
 	

@@ -16,6 +16,9 @@ import javax.net.ssl.X509TrustManager;
 import java.security.cert.CertificateFactory;
 import java.security.cert.Certificate;
 
+import java.util.List;
+import java.util.Arrays;
+
 public class T3s {
 	
 	private static Logger myLogger = Logger.getLogger("JNDIAT");
@@ -112,26 +115,36 @@ public class T3s {
 			}
 		};
 		SSLSocket socket = null;
-		try {
-			SSLContext sc = SSLContext.getInstance("TLSv1");
-			sc.init(null, new TrustManager[] { trm }, null);
-			SSLSocketFactory factory = sc.getSocketFactory();
-			socket =(SSLSocket)factory.createSocket(this.ip, this.port);
-			socket.startHandshake();
-			SSLSession session = socket.getSession();
-			java.security.cert.Certificate[] servercerts = session.getPeerCertificates();
-			writer = new BufferedWriter(new FileWriter(this.TEMP_CERT_FILE));
-			for (int i = 0; i < servercerts.length; i++) {
-				writer.write("-----BEGIN CERTIFICATE-----\n");
-				writer.write(new sun.misc.BASE64Encoder().encode(servercerts[i].getEncoded()));
-				writer.write("\n-----END CERTIFICATE-----\n");
-			}
-			writer.close();
-			socket.close();
-		} catch (Exception e) {
-			myLogger.severe("Impossible to write the cer file "+this.TEMP_CERT_FILE+": "+e);
-			return false;
-		}
+        boolean certificateGot = false;
+        List<String> sslVersions = Arrays.asList("sslv3","TLSv1", "TLSv1.1", "TLSv1.2");
+        for (String aSSLV : sslVersions) {
+            try {
+                myLogger.fine("Trying to get remote certificate with "+aSSLV+" without ssl validation...");
+                SSLContext sc = SSLContext.getInstance(aSSLV);
+                sc.init(null, new TrustManager[] { trm }, null);
+                SSLSocketFactory factory = sc.getSocketFactory();
+                socket =(SSLSocket)factory.createSocket(this.ip, this.port);
+                socket.startHandshake();
+                SSLSession session = socket.getSession();
+                java.security.cert.Certificate[] servercerts = session.getPeerCertificates();
+                writer = new BufferedWriter(new FileWriter(this.TEMP_CERT_FILE));
+                for (int i = 0; i < servercerts.length; i++) {
+                    writer.write("-----BEGIN CERTIFICATE-----\n");
+                    writer.write(new sun.misc.BASE64Encoder().encode(servercerts[i].getEncoded()));
+                    writer.write("\n-----END CERTIFICATE-----\n");
+                }
+                writer.close();
+                socket.close();
+                certificateGot = true;
+                break;//We have certificate, break loop for testing all SSL versions
+            } catch (Exception err) {
+                myLogger.fine("Impossible to write the cer file "+this.TEMP_CERT_FILE+" because: "+err);
+            }
+        }
+        if (certificateGot == false){
+            myLogger.severe("Impossible to get and write the cer file "+this.TEMP_CERT_FILE);
+            return false;
+        }
 		myLogger.fine("The file "+this.TEMP_CERT_FILE+" has been created to stored the remote certificate");
 		return true;
 	}
@@ -144,6 +157,7 @@ public class T3s {
 		System.setProperty("weblogic.security.CustomTrustKeyStoreFileName", this.TEMP_KEYSTORE_FILE);
 		System.setProperty("weblogic.security.CustomTrustKeyStorePassPhrase",""); 
 		System.setProperty("weblogic.security.CustomTrustKeyStoreType","JKS");
+        System.setProperty("weblogic.StdoutDebugEnabled", "true");//<--------------------------------------------------------------------- NEED TO BE REMOVED
 	}
 	
 	/* Returns true if the current keystore file exists. Otherwise return false*/

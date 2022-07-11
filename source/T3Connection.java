@@ -48,7 +48,6 @@ public class T3Connection extends MyPrinter {
 	//*************   Connection *************
 	//Return True if connected. Otherwise return False
 	public boolean connection (String ip, int port, String username, String password){
-		myLogger.fine("Try to establish a connection to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 		this.ip = ip;
 		this.port = port;
 		this.user = username;
@@ -60,45 +59,50 @@ public class T3Connection extends MyPrinter {
 		env.put(Context.SECURITY_PRINCIPAL,this.user);
 		env.put(Context.SECURITY_CREDENTIALS,this.password);
 		try {
+            myLogger.fine("Try to establish a T3 connection (without ssl) to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			this.ctx = new InitialContext(env);
 			myLogger.info("The connection is established trough the T3 protocol (no encryption)");
 			myLogger.fine("You can use "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
 			return true;
-		}catch (CommunicationException er) {
-			if (er.toString().contains(ERROR_CONNECTION_RESET)){
-				myLogger.fine("Trying to connect with t3s (t3 over SSL) because there is a reset with t3");
-				this.t3s = new T3s (this.ip, this.port);
-				if (t3s.makeT3sConfig() == false){
-					myLogger.severe("Impossible to make the T3s configuration");
-					return false;
-				}
-				else {
-					myLogger.fine("T3s configuration made");
-				}
-				this.uri = "t3s://"+ this.ip +":"+ this.port +"";
-				env.put(Context.PROVIDER_URL,this.uri);
-				try {
-					this.ctx = new InitialContext(env);
-					myLogger.info("The connection is established trough the T3s protocol (SSL/TLS encryption)");
-					myLogger.fine("You can use "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
-					return true;
-				}catch (AuthenticationException e) {
-					if (this.cntionErrorAsSevereError == true){myLogger.severe("'"+this.user+"' can't be authenticated on "+ip+":"+port);}
-					else {myLogger.fine("Can't be authenticated on "+ip+":"+port+"with credentials '"+username+"'/'"+password+"': invalid credentials");}
-					this.lastConnectionErrorDescription = e.toString();
-				}catch (Exception e) {
-					this.genericConnectionErrorPrinter(e);
-				}
-			}
-			else {
-				this.genericConnectionErrorPrinter(er);
-			}
-		}catch (AuthenticationException e) {
-			if (this.cntionErrorAsSevereError == true){myLogger.severe("'"+this.user+"' can't be authenticated on "+ip+":"+port);}
-			else {myLogger.fine("Can't be authenticated on "+ip+":"+port+"with credentials '"+username+"'/'"+password+"': invalid credentials");}
-			this.lastConnectionErrorDescription = e.toString();
-		}catch (Exception e) {
-			this.genericConnectionErrorPrinter(e);
+		}catch (NamingException ei1) {
+            myLogger.fine("Connection error"+ei1.toString());
+            try {
+                this.ctx.close();//Close context
+            }catch (Exception e2) {
+                myLogger.fine("Impossible to close context");
+            }
+            myLogger.fine("Try to establish a T3S connection (with ssl) to "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
+            this.t3s = new T3s (this.ip, this.port);
+            if (t3s.makeT3sConfig() == false){
+                myLogger.severe("Impossible to make the T3s configuration");
+                return false;
+            }
+            else {
+                myLogger.fine("T3s configuration made");
+            }
+            this.uri = "t3s://"+ this.ip +":"+ this.port +"";
+            env.put(Context.PROVIDER_URL,this.uri);
+            try {
+                this.ctx = new InitialContext(env);
+                myLogger.info("The connection is established trough the T3s protocol (SSL/TLS encryption)");
+                myLogger.fine("You can use "+ip+":"+port+" with credentials '"+username+"'/'"+password+"'");
+                return true;
+            }catch (AuthenticationException e) {
+                try {
+                    this.ctx.close();//Close context
+                }catch (Exception e2) {
+                    myLogger.fine("Impossible to close context");
+                }
+                if (this.cntionErrorAsSevereError == true){
+                    myLogger.severe("'"+this.user+"' can't be authenticated on "+ip+":"+port);
+                }
+                else {
+                    myLogger.fine("Can't be authenticated on "+ip+":"+port+"with credentials '"+username+"'/'"+password+"': invalid credentials");
+                }
+                this.lastConnectionErrorDescription = e.toString();
+            }catch (Exception e) {
+                this.genericConnectionErrorPrinter(e);
+            }
 		}
 		return false;
 	}

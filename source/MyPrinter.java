@@ -25,6 +25,7 @@ public class MyPrinter {
 	//CONSTANTS (ERRORS)
 	public static final String ERROR_STREAM_CLOSED = "java.io.IOException: Stream closed";
 	public static final String ERROR_CONNECTION_RESET = "java.net.SocketException: Connection reset";
+    public static final String ERROR_LOGIN_FAILED_UNKNOWN = "Login failed for an unknown reason";
 
 	public MyPrinter(){
 		myLogger.fine("MyPrinter object created");
@@ -63,11 +64,5 @@ public class MyPrinter {
 	public void print(String message){
 		System.out.println(message);
 	}
-	
-	/*
-	public void printUnknownNews (String message){
-		
-	}
-	*/
 }
 
